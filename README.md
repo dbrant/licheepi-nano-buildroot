@@ -78,12 +78,6 @@ On Windows, Rufus or Balena Etcher can be used, or another utility like that.
 
 This build includes a DTS file that supports a 480x272 TFT screen (plugged into the 40-pin flex-PCB connector on the board). The custom kernel branch also includes a DTS file with support for 800x480 TFT resolution: use `suniv-f1c100s-licheepi-nano` name for the DTS file, and update `boot.cmd` and `genimage.cfg` to reference that device tree as well.
 
-## Working from Windows
-
-If you checked out the repo in Windows, and are running Vagrant in a Windows environment, there may be problems with line endings (CRLF versus LF). The whole build might actually work, but then the boot process will fail because the `boot.cmd` file contains lines with incorrect line endings, which will cause u-boot to break.
-
-You'll need to manually convert the line endings to unix (LF) in these files before proceeding.
-
 ## Setting up GPIO
 
 If you want to use the GPIO pins (E0 - E12), the reference number of each pin is 128 plus the E-number. For example, `E7` would be 135. To work with a GPIO pin, such as E7, you would do the following:
@@ -102,3 +96,29 @@ If you want to use the pin as an input, you would do:
 echo "in" > /sys/class/gpio/gpio135/direction
 cat /sys/class/gpio/gpio135/value
 ```
+
+## Troubleshooting
+
+### Working from Windows
+
+If you checked out the repo in Windows, and are running Vagrant in a Windows environment, there may be problems with line endings (CRLF versus LF). The whole build might actually work, but then the boot process will fail because the `boot.cmd` file contains lines with incorrect line endings, which will cause u-boot to break.
+
+You'll need to manually convert the line endings to unix (LF) in these files before proceeding.
+
+### Rebuilding boot.scr
+
+The `make` workflow does not automatically recreate `boot.scr` if changes are made to the `boot.cmd` file. To recreate it manually, try the following:
+
+```sh
+./output/build/uboot-nano-v2018.01/tools/mkimage -A arm -O linux -T script -C none -a 0 -e 0 -n 'u-boot script' -d /vagrant/board/licheepi_nano/boot.cmd boot.scr
+```
+
+### Errors during make
+
+* Running out of space (could not allocate ext2 blocks)
+
+Just run `make menuconfig`, go to Filesystem images, and increase the "exact size" of the ext2 filesystem.
+
+* Could not find `/board/licheepi_nano/...` files (i.e. `make` is trying to search from the root directory).
+
+This indicates that the `BR2_EXTERNAL_LICHEEPI_NANO_PATH` environment variable isn't set. You can either set it, or, in a jam, you can just actually copy over the `/board/licheepi_nano` directory to the root.
