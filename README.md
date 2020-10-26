@@ -1,5 +1,7 @@
 # Lichee Pi Nano Bootable Linux Image (Buildroot)
 
+(This is forked from [this original repo](https://github.com/unframework/licheepi-nano-buildroot) with some documentation updates specific for my purposes.)
+
 [Lichee Pi Nano](http://nano.lichee.pro/index.html) ([English article](https://www.cnx-software.com/2018/08/17/licheepi-nano-cheap-sd-card-sized-linux-board/)) is a very small single-board computer that is about the size of an SD card. It can run Linux. There is a good amount of official documentation on the [original manufacturer site](http://nano.lichee.pro/get_started/first_eye.html) (in Chinese, but easily readable thanks to Google Translate). However, the tooling used to build the full card/SPI-Flash images is mostly made up of custom shell scripts, and is not always easy to extend or maintain.
 
 This repository contains a Buildroot config extension that allows all of those build steps to be handled via a single Buildroot `make` command. That means fully building the U-Boot image, Linux kernel, the rootfs image and the final partitioned binary image for flashing onto the bootable SD card (SPI-Flash support is possible but not handled here yet).
@@ -32,13 +34,7 @@ Otherwise, download Buildroot and extract it into a folder.
 Before building, install these Ubuntu packages:
 
 ```sh
-sudo apt-get install swig python-dev fakeroot devscripts
-```
-
-If there are still error messages during later build, try installing these (sorry, did not clean up the list yet, some might be unnecessary):
-
-```sh
-sudo apt-get install -y chrpath gawk texinfo libsdl1.2-dev whiptail diffstat cpio libssl-dev
+sudo apt-get install swig python-dev fakeroot devscripts chrpath gawk texinfo libsdl1.2-dev whiptail diffstat cpio libssl-dev
 ```
 
 Then, create initial build configuration:
@@ -70,6 +66,8 @@ The build may take 1.5 hours on a decent machine, or longer. For a faster build,
 
 A successful build will produce a `output/images` folder. That folder contains a `sdcard.img` file that can now be written to the bootable SD card. For example:
 
+Note: the `post-image.sh` script contains the `genimage` call where you can change the output directory where the final image is written.
+
 ```sh
 sudo dd if=output/images/sdcard.img of=DEVICE # e.g. /dev/sd?, etc
 ```
@@ -85,3 +83,22 @@ This build includes a DTS file that supports a 480x272 TFT screen (plugged into 
 If you checked out the repo in Windows, and are running Vagrant in a Windows environment, there may be problems with line endings (CRLF versus LF). The whole build might actually work, but then the boot process will fail because the `boot.cmd` file contains lines with incorrect line endings, which will cause u-boot to break.
 
 You'll need to manually convert the line endings to unix (LF) in these files before proceeding.
+
+## Setting up GPIO
+
+If you want to use the GPIO pins (E0 - E12), the reference number of each pin is 128 plus the E-number. For example, `E7` would be 135. To work with a GPIO pin, such as E7, you would do the following:
+
+```sh
+echo "135" > /sys/class/gpio/export
+echo "out" > /sys/class/gpio/gpio135/direction
+echo "1" > /sys/class/gpio/gpio135/value
+```
+
+You can write values of "1" or "0" to make the pin high or low.
+
+If you want to use the pin as an input, you would do:
+
+```sh
+echo "in" > /sys/class/gpio/gpio135/direction
+cat /sys/class/gpio/gpio135/value
+```
