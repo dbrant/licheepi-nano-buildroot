@@ -1,7 +1,5 @@
 # Lichee Pi Nano Bootable Linux Image (Buildroot)
 
-![Lichee Pi Nano with LCD screen](licheepi-nano-lcd.jpg)
-
 [Lichee Pi Nano](http://nano.lichee.pro/index.html) ([English article](https://www.cnx-software.com/2018/08/17/licheepi-nano-cheap-sd-card-sized-linux-board/)) is a very small single-board computer that is about the size of an SD card. It can run Linux. There is a good amount of official documentation on the [original manufacturer site](http://nano.lichee.pro/get_started/first_eye.html) (in Chinese, but easily readable thanks to Google Translate). However, the tooling used to build the full card/SPI-Flash images is mostly made up of custom shell scripts, and is not always easy to extend or maintain.
 
 This repository contains a Buildroot config extension that allows all of those build steps to be handled via a single Buildroot `make` command. That means fully building the U-Boot image, Linux kernel, the rootfs image and the final partitioned binary image for flashing onto the bootable SD card (SPI-Flash support is possible but not handled here yet).
@@ -50,6 +48,12 @@ Then, create initial build configuration:
 BR2_EXTERNAL=/vagrant make licheepi_nano_defconfig
 ```
 
+If the above fails, just copy over the `licheepi_nano_defconfig` file from this repo to the `configs` directory of buildroot, and run:
+
+```sh
+make ./configs/licheepi_nano_defconfig
+```
+
 Customize Buildroot configuration if needed:
 
 ```sh
@@ -75,3 +79,9 @@ On Windows, Rufus or Balena Etcher can be used, or another utility like that.
 ## LCD Screen Support
 
 This build includes a DTS file that supports a 480x272 TFT screen (plugged into the 40-pin flex-PCB connector on the board). The custom kernel branch also includes a DTS file with support for 800x480 TFT resolution: use `suniv-f1c100s-licheepi-nano` name for the DTS file, and update `boot.cmd` and `genimage.cfg` to reference that device tree as well.
+
+## Working from Windows
+
+If you checked out the repo in Windows, and are running Vagrant in a Windows environment, there may be problems with line endings (CRLF versus LF). The whole build might actually work, but then the boot process will fail because the `boot.cmd` file contains lines with incorrect line endings, which will cause u-boot to break.
+
+You'll need to manually convert the line endings to unix (LF) in these files before proceeding.
