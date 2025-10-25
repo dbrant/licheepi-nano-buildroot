@@ -17,6 +17,9 @@ COPY \
     external.mk \
     ./
 
+# in case the repo was checked out in Windows, explicitly remove CR characters from text files.
+RUN find /root/licheepi-nano/ -type f -exec sed -i 's/\r$//' {} \;
+
 # reset Buildroot config and trigger Linux kernel rebuild
 WORKDIR /root/buildroot
 RUN BR2_EXTERNAL=/root/licheepi-nano make licheepi_nano_defconfig
