@@ -1,0 +1,283 @@
+--- "a/sdl/configure"
++++ "b/sdl/configure"
+@@ -3081,7 +3081,7 @@ ac_compiler_gnu=$ac_cv_c_compiler_gnu
+ 
+ ac_ext=cpp
+-ac_cpp='$CXXCPP $CPPFLAGS'
+-ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS conftest.$ac_ext >&5'
++ac_cpp='$CXXCPP $CPPFLAGS -std=c++11'
++ac_compile='$CXX -c $CXXFLAGS $CPPFLAGS -std=c++11 conftest.$ac_ext >&5'
+ ac_link='$CXX -o conftest$ac_exeext $CXXFLAGS $CPPFLAGS $LDFLAGS conftest.$ac_ext $LIBS >&5'
+ ac_compiler_gnu=$ac_cv_cxx_compiler_gnu
+ if test -z "$CXX"; then
+@@ -5078,265 +5078,15 @@ $as_echo "no" >&6; }
+ 	fi
+ fi
+ 
+-# Check whether right shift is arithmetic or not
+-
+-
+-
+-
+-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether right shift int8 is arithmetic" >&5
+-$as_echo_n "checking whether right shift int8 is arithmetic... " >&6; }
+-
+-	OLD_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$OLD_CXXFLAGS $snes9x_have_stdint_h"
+-
+-	if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
+-else
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-		#ifdef HAVE_STDINT_H
+-		#include <stdint.h>
+-		typedef int8_t			int8;
+-		typedef int16_t			int16;
+-		typedef int32_t			int32;
+-		typedef int64_t			int64;
+-		#else
+-		typedef signed char		int8;
+-		typedef signed short	int16;
+-		typedef signed int		int32;
+-		#ifdef __GNUC__
+-		__extension__
+-		#endif
+-		typedef long long		int64;
+-		#endif
+-
+-		int main (void)
+-		{
+-			int8	i;
+-
+-			i = -1;
+-			i >>= 1;
+ 
+-			return (i < 0 ? 0 : 1);
+-		}
+ 
+-_ACEOF
+-if ac_fn_cxx_try_run "$LINENO"; then :
+-  snes9x_sar_int8="yes"
+-else
+-  snes9x_sar_int8="no"
+-fi
+-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+-  conftest.$ac_objext conftest.beam conftest.$ac_ext
+-fi
+ 
++# Check whether right shift is arithmetic or not
+ 
+-	CXXFLAGS="$OLD_CXXFLAGS"
+-
+-	if test "x$snes9x_sar_int8" = "xno"; then
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	else
+-		S9XDEFS="$S9XDEFS -DRIGHTSHIFT_int8_IS_SAR"
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-	fi
+-
+-
+-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether right shift int16 is arithmetic" >&5
+-$as_echo_n "checking whether right shift int16 is arithmetic... " >&6; }
+-
+-	OLD_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$OLD_CXXFLAGS $snes9x_have_stdint_h"
+-
+-	if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
+-else
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-		#ifdef HAVE_STDINT_H
+-		#include <stdint.h>
+-		typedef int8_t			int8;
+-		typedef int16_t			int16;
+-		typedef int32_t			int32;
+-		typedef int64_t			int64;
+-		#else
+-		typedef signed char		int8;
+-		typedef signed short	int16;
+-		typedef signed int		int32;
+-		#ifdef __GNUC__
+-		__extension__
+-		#endif
+-		typedef long long		int64;
+-		#endif
+-
+-		int main (void)
+-		{
+-			int16	i;
+-
+-			i = -1;
+-			i >>= 1;
+-
+-			return (i < 0 ? 0 : 1);
+-		}
+-
+-_ACEOF
+-if ac_fn_cxx_try_run "$LINENO"; then :
+-  snes9x_sar_int16="yes"
+-else
+-  snes9x_sar_int16="no"
+-fi
+-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+-  conftest.$ac_objext conftest.beam conftest.$ac_ext
+-fi
+-
+-
+-	CXXFLAGS="$OLD_CXXFLAGS"
+-
+-	if test "x$snes9x_sar_int16" = "xno"; then
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	else
+-		S9XDEFS="$S9XDEFS -DRIGHTSHIFT_int16_IS_SAR"
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-	fi
+-
+-
+-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether right shift int32 is arithmetic" >&5
+-$as_echo_n "checking whether right shift int32 is arithmetic... " >&6; }
+-
+-	OLD_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$OLD_CXXFLAGS $snes9x_have_stdint_h"
+-
+-	if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
+-else
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-		#ifdef HAVE_STDINT_H
+-		#include <stdint.h>
+-		typedef int8_t			int8;
+-		typedef int16_t			int16;
+-		typedef int32_t			int32;
+-		typedef int64_t			int64;
+-		#else
+-		typedef signed char		int8;
+-		typedef signed short	int16;
+-		typedef signed int		int32;
+-		#ifdef __GNUC__
+-		__extension__
+-		#endif
+-		typedef long long		int64;
+-		#endif
+-
+-		int main (void)
+-		{
+-			int32	i;
+-
+-			i = -1;
+-			i >>= 1;
+-
+-			return (i < 0 ? 0 : 1);
+-		}
+-
+-_ACEOF
+-if ac_fn_cxx_try_run "$LINENO"; then :
+-  snes9x_sar_int32="yes"
+-else
+-  snes9x_sar_int32="no"
+-fi
+-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+-  conftest.$ac_objext conftest.beam conftest.$ac_ext
+-fi
+-
+-
+-	CXXFLAGS="$OLD_CXXFLAGS"
+-
+-	if test "x$snes9x_sar_int32" = "xno"; then
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	else
+-		S9XDEFS="$S9XDEFS -DRIGHTSHIFT_int32_IS_SAR"
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-	fi
+-
+-
+-	{ $as_echo "$as_me:${as_lineno-$LINENO}: checking whether right shift int64 is arithmetic" >&5
+-$as_echo_n "checking whether right shift int64 is arithmetic... " >&6; }
+-
+-	OLD_CXXFLAGS="$CXXFLAGS"
+-	CXXFLAGS="$OLD_CXXFLAGS $snes9x_have_stdint_h"
+-
+-	if test "$cross_compiling" = yes; then :
+-  { { $as_echo "$as_me:${as_lineno-$LINENO}: error: in \`$ac_pwd':" >&5
+-$as_echo "$as_me: error: in \`$ac_pwd':" >&2;}
+-as_fn_error $? "cannot run test program while cross compiling
+-See \`config.log' for more details" "$LINENO" 5 ; }
+-else
+-  cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+-/* end confdefs.h.  */
+-
+-		#ifdef HAVE_STDINT_H
+-		#include <stdint.h>
+-		typedef int8_t			int8;
+-		typedef int16_t			int16;
+-		typedef int32_t			int32;
+-		typedef int64_t			int64;
+-		#else
+-		typedef signed char		int8;
+-		typedef signed short	int16;
+-		typedef signed int		int32;
+-		#ifdef __GNUC__
+-		__extension__
+-		#endif
+-		typedef long long		int64;
+-		#endif
+-
+-		int main (void)
+-		{
+-			int64	i;
+-
+-			i = -1;
+-			i >>= 1;
+-
+-			return (i < 0 ? 0 : 1);
+-		}
+-
+-_ACEOF
+-if ac_fn_cxx_try_run "$LINENO"; then :
+-  snes9x_sar_int64="yes"
+-else
+-  snes9x_sar_int64="no"
+-fi
+-rm -f core *.core core.conftest.* gmon.out bb.out conftest$ac_exeext \
+-  conftest.$ac_objext conftest.beam conftest.$ac_ext
+-fi
+-
+-
+-	CXXFLAGS="$OLD_CXXFLAGS"
+-
+-	if test "x$snes9x_sar_int64" = "xno"; then
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: no" >&5
+-$as_echo "no" >&6; }
+-	else
+-		S9XDEFS="$S9XDEFS -DRIGHTSHIFT_int64_IS_SAR"
+-		{ $as_echo "$as_me:${as_lineno-$LINENO}: result: yes" >&5
+-$as_echo "yes" >&6; }
+-	fi
++snes9x_sar_int8="yes"
++snes9x_sar_int16="yes"
++snes9x_sar_int32="yes"
++snes9x_sar_int64="yes"
+ 
+ 
+ if test "x$snes9x_sar_int8" = "xyes" -a "x$snes9x_sar_int16" = "xyes" -a "x$snes9x_sar_int32" = "xyes" -a "x$snes9x_sar_int64" = "xyes"; then

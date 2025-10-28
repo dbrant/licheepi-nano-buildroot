@@ -1,0 +1,23 @@
+--- "a/sdl/sdlvideo.cpp"
++++ "b/sdl/sdlvideo.cpp"
+@@ -173,7 +173,7 @@ void S9xInitDisplay (int argc, char **argv)
+ 	 * we just go along with RGB565 for now, nothing else..
+ 	 */
+ 	
+-	S9xSetRenderPixelFormat(RGB565);
++	S9xSetRenderPixelFormat(RGB565); 
+ 	
+ 	S9xBlitFilterInit();
+ 	S9xBlit2xSaIFilterInit();
+@@ -188,9 +188,9 @@ void S9xInitDisplay (int argc, char **argv)
+ 	 */	
+         if (GUI.fullscreen == TRUE)
+         {
+-                GUI.sdl_screen = SDL_SetVideoMode(0, 0, 16, SDL_FULLSCREEN);
++                GUI.sdl_screen = SDL_SetVideoMode(0, 0, 16, SDL_FULLSCREEN); 
+         } else {
+-                GUI.sdl_screen = SDL_SetVideoMode(SNES_WIDTH * 2, SNES_HEIGHT_EXTENDED * 2, 16, 0);
++                GUI.sdl_screen = SDL_SetVideoMode(480, 272, 16, 0);  
+         }
+ 
+         if (GUI.sdl_screen == NULL)
