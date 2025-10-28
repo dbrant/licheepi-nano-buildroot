@@ -1,0 +1,22 @@
+NESEMU2_VERSION = b7bb965fd40e584b6ea4b83f94e93f94f73030a
+NESEMU2_SITE = https://github.com/holodnak/nesemu2.git
+NESEMU2_SITE_METHOD = git
+NESEMU2_LICENSE = GPL-2.0+
+NESEMU2_LICENSE_FILES = LICENSE
+NESEMU2_INSTALL_STAGING = YES
+NESEMU2_INSTALL_TARGET = YES
+NESEMU2_DEPENDENCIES = sdl
+
+define NESEMU2_BUILD_CMDS
+    $(MAKE) CC="$(TARGET_CC)" CXX="$(TARGET_CXX)" \
+    CFLAGS="$(TARGET_CFLAGS) -O3 $(shell $(PKG_CONFIG_HOST_BINARY) sdl --cflags)" \
+    LDFLAGS="$(TARGET_LDFLAGS) $(shell $(PKG_CONFIG_HOST_BINARY) sdl --libs) -lc" \
+    LD="$(TARGET_CC)" -C $(@D)/ 
+	
+endef
+
+define NESEMU2_INSTALL_TARGET_CMDS
+	$(INSTALL) -D $(@D)/nesemu2 $(TARGET_DIR)/usr/bin/nesemu2
+endef
+
+$(eval $(generic-package))

@@ -1,0 +1,32 @@
+--- "a/source/mappers/boards/other/jycompany.c"
++++ "b/source/mappers/boards/other/jycompany.c"
+@@ -401,7 +401,7 @@ static void ppucycle()
+ 	}
+ }
+ 
+-void video_updaterawpixel(int line, int pixel, u32 s);
++//void video_updaterawpixel(int line, int pixel, u32 s);
+ 
+ static void cpucycle()
+ {
+@@ -410,7 +410,7 @@ static void cpucycle()
+ 	if (LINECYCLES == 0) {
+ 		if (irqline != -3) {
+ 			for (i = 0; i < 256; i++) {
+-				video_updaterawpixel(irqline, i, 0x00FF00);
++				//video_updaterawpixel(irqline, i, 0x00FF00);
+ 			}
+ 			irqline = -3;
+ 		}
+
+--- "a/source/nes/cart/cart.c"
++++ "b/source/nes/cart/cart.c"
+@@ -176,7 +176,7 @@ cart_t *cart_load_patched(const char *filename,const char *patchfilename)
+ 		case FORMAT_UNIF:		n = cart_load_unif(ret,file);		break;
+ 		case FORMAT_FDS:
+ 		case FORMAT_RAWFDS:	n = cart_load_fds(ret, file);		break;
+-		case FORMAT_DOCTOR:	n = cart_load_doctor(ret, file);	break;
++//		case FORMAT_DOCTOR:	n = cart_load_doctor(ret, file);	break;
+ 		case FORMAT_NSF:		n = cart_load_nsf(ret,file);		break;
+ //		case FORMAT_SPLIT:	n = cart_load_split(ret,file);	break;
+ 		default:
