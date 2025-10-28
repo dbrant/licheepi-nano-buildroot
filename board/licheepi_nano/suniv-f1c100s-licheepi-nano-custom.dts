@@ -11,12 +11,10 @@
 	model = "Lichee Pi Nano (Custom)";
 };
 
-/*
 &panel {
 	// override default resolution (800x480) with smaller resolution: 480x272
 	compatible = "qiaodian,qd43003c0-40", "simple-panel";
 };
-*/
 
 /*
 &lradc {
