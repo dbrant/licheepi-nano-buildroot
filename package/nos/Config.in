@@ -1,0 +1,5 @@
+config BR2_PACKAGE_NOS
+    bool "nos"
+    select BR2_PACKAGE_SDL2
+    help
+      Nos

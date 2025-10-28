@@ -1,0 +1,6 @@
+system=fbdev
+device=/dev/fb0
+hardware
+vt-switch
+vsync-none
+no-cursor

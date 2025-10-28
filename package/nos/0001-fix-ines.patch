@@ -1,0 +1,74 @@
+--- "a/ines/ines.cpp"
++++ "b/ines/ines.cpp"
+@@ -35,7 +35,9 @@ Factory get_mapper(uint8_t mapper_id)
+     {
+         case(0x00): return make_mapper<Mapper00>;
+ 
+-        default:    throw runtime_error("Mapper not implemented");
++        default:
++            printf("Warning: Mapper not implemented.\n");
++            return make_mapper<Mapper00>;
+     }
+ }
+ 
+@@ -46,7 +48,9 @@ unique_ptr<NES::Cartridge> load_ines(const vector<uint8_t>& input)
+ {
+     static constexpr unsigned int header_size = 0x10;
+     
+-    auto fail = [](){ throw runtime_error("Invalid iNES file"); };
++    auto fail = [](){
++        printf("Invalid iNES file\n");
++    };
+ 
+     if(input.size() < 0x10)
+         fail();
+
+--- "a/test/sdl_aux.h"
++++ "b/test/sdl_aux.h"
+@@ -25,7 +25,9 @@ inline void init(State& state, unsigned int width, unsigned int height,
+ {
+     auto init_fail = [](){ throw std::runtime_error("Failed to init SDL"); };
+ 
+-    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS);
++    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) != 0) {
++        printf("ERROR: SDL_Init failed: %s\n", SDL_GetError());
++    }
+ 
+     enum { ANY_DRIVER = -1, NO_FLAGS = 0 };
+ 
+@@ -33,19 +35,21 @@ inline void init(State& state, unsigned int width, unsigned int height,
+     const char* nearest_pixel_sampling = "0"; 
+     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, nearest_pixel_sampling);
+     
+-    auto window = SDL_CreateWindow("test", 0, 0, width, height,
+-        SDL_WINDOW_FULLSCREEN_DESKTOP);
+-    if(window == NULL) init_fail();
++    auto window = SDL_CreateWindow("test", 0, 0, 480, 272, 0);
++    if(window == NULL){
++        printf("ERROR: SDL_Init failed: %s\n", SDL_GetError());
++        throw std::runtime_error("Failed to init SDL (window)");
++    }
+     
+     auto renderer = SDL_CreateRenderer(window, ANY_DRIVER, 
+         SDL_RENDERER_PRESENTVSYNC);
+         //NO_FLAGS);
+-    if(renderer == NULL) init_fail();
++    if(renderer == NULL) throw std::runtime_error("Failed to init SDL (renderer)");
+     SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
+ 
+     auto texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
+         SDL_TEXTUREACCESS_STREAMING, width, height);
+-    if(texture == NULL) init_fail();
++    if(texture == NULL) throw std::runtime_error("Failed to init SDL (texture)");
+ 
+ 
+     static_assert(sizeof(float) == 4);
+@@ -60,7 +64,7 @@ inline void init(State& state, unsigned int width, unsigned int height,
+     SDL_AudioSpec dummy; // Unused, but required for SDL
+     auto audio_device = SDL_OpenAudioDevice(NULL, 0, &audio_spec, &dummy, 
+         NO_FLAGS);
+-    if(audio_device == 0) init_fail();
++    if(audio_device == 0) throw std::runtime_error("Failed to init SDL (audio)");;
+     SDL_PauseAudioDevice(audio_device, 0);
+ 
+     state = {
