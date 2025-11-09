@@ -7,10 +7,13 @@ ARG BASE_VERSION=latest
 
 FROM $BASE_IMAGE:$BASE_VERSION AS local
 
+RUN apt-get install -qy cmake
+
 # copy newest version of local files
 WORKDIR /root/licheepi-nano
 COPY board/ board/
 COPY configs/ configs/
+COPY package/ package/
 COPY \
     Config.in \
     external.desc \
@@ -22,7 +25,14 @@ RUN find /root/licheepi-nano/ -type f -exec sed -i 's/\r$//' {} \;
 
 # reset Buildroot config and trigger Linux kernel rebuild
 WORKDIR /root/buildroot
+
+
+RUN BR2_EXTERNAL=/root/licheepi-nano make zlib
+RUN BR2_EXTERNAL=/root/licheepi-nano make libpngx
+
+#RUN BR2_EXTERNAL=/root/licheepi-nano make dosbox-staging
 RUN BR2_EXTERNAL=/root/licheepi-nano make licheepi_nano_defconfig
+
 RUN cd output/build/uboot-v2021.01-f1c100s-4/ && rm .stamp_built .stamp_*installed
 RUN cd output/build/host-uboot-tools-2021.07/ && rm .stamp_built .stamp_*installed
 RUN cd output/build/linux-custom/ && rm .stamp_dotconfig .stamp_configured .stamp_built .stamp_*installed

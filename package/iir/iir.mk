@@ -1,0 +1,10 @@
+IIR_VERSION = 1.10.0
+IIR_SITE = https://github.com/berndporr/iir1.git
+IIR_SITE_METHOD = git
+IIR_LICENSE = BSD-3-Clause
+IIR_LICENSE_FILES = LICENSE
+IIR_INSTALL_STAGING = YES
+IIR_INSTALL_TARGET = YES
+IIR_DEPENDENCIES =
+
+$(eval $(cmake-package))

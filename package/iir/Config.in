@@ -1,0 +1,4 @@
+config BR2_PACKAGE_IIR
+    bool "iir"
+    help
+      DSP IIR filter library (used by dosbox-staging)
