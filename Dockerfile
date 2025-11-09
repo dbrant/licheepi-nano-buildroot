@@ -29,8 +29,8 @@ WORKDIR /root/buildroot
 
 RUN BR2_EXTERNAL=/root/licheepi-nano make zlib
 RUN BR2_EXTERNAL=/root/licheepi-nano make libpngx
+RUN BR2_EXTERNAL=/root/licheepi-nano make dosbox-staging
 
-#RUN BR2_EXTERNAL=/root/licheepi-nano make dosbox-staging
 RUN BR2_EXTERNAL=/root/licheepi-nano make licheepi_nano_defconfig
 
 RUN cd output/build/uboot-v2021.01-f1c100s-4/ && rm .stamp_built .stamp_*installed
