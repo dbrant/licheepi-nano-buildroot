@@ -29,12 +29,12 @@ The easiest way is using Docker (on Windows/MacOS/Linux). If your Docker is olde
 First, clone this repo to your host:
 
 ```sh
-git clone git@github.com:unframework/licheepi-nano-buildroot.git
+git clone git@github.com:dbrant/licheepi-nano-buildroot.git
 ```
 
 There are two options available - fast build using the [prepared Docker Hub images](https://hub.docker.com/r/unframework/licheepi-nano-buildroot) or from scratch (takes 1-2 hours or more).
 
-Fast build:
+Fast build (Linux):
 
 ```sh
 docker build --output type=tar,dest=- . | (mkdir -p dist && tar x -C dist)
@@ -42,10 +42,26 @@ docker build --output type=tar,dest=- . | (mkdir -p dist && tar x -C dist)
 
 The built image will be available in `dist/sdcard.img` - you can write this to your bootable micro SD card (see below).
 
-Full rebuild from scratch:
+
+Fast build (Windows):
+
+```
+docker build --output type=tar,dest=out.tar .
+```
+
+This will create a file called `out.tar` that contains the SD card image.
+
+
+Full rebuild from scratch (Linux):
 
 ```sh
 docker build -f Dockerfile.base --output type=tar,dest=- . | (mkdir -p dist && tar x -C dist)
+```
+
+Full rebuild from scratch (Windows):
+
+```
+docker build -f Dockerfile.base --output type=tar,dest=out.tar .
 ```
 
 ## Write Bootable Image to SD Card
@@ -68,9 +84,18 @@ Note that certain config file changes will not automatically cause Buildroot to 
 
 It's very convenient to run the intermediate Docker image and inspect the build folder, run `make menuconfig`, etc:
 
+In Linux:
+
 ```sh
 docker build --target main -t licheepi-nano-tmp
 docker run -it licheepi-nano-tmp /bin/bash
+```
+
+In Windows:
+
+```
+docker build --target base -f Dockerfile.base -t licheepi-nano-tmp .
+docker run -it licheepi-nano-tmp //bin/bash
 ```
 
 Just don't forget to e.g. carry out any resulting `.config` file changes back into your source folder as needed.
